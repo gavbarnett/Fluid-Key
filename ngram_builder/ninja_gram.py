@@ -14,27 +14,23 @@ import nltk.corpus
 
 def ngram_builder(ngram_dict, rawstr, depth):
     strlist = list(rawstr.encode("ascii", "ignore").decode().lower())
-    ngram_list = list(ngrams(strlist, depth))
+    ngram_tup = list(ngrams(strlist, depth))
 
-    def build_dict(n):
-        if (n[0] in ngram_dict):
-            ngram_dict[n[0]]["count"] = ngram_dict[n[0]]["count"]+1
-            if (n[1] in ngram_dict[n[0]]):
-                ngram_dict[n[0]][n[1]]["count"] = ngram_dict[n[0]
-                                                             ][n[1]]["count"]+1
-                if (n[2] in ngram_dict[n[0]][n[1]]):
-                    ngram_dict[n[0]][n[1]][n[2]
-                                           ]["count"] = ngram_dict[n[0]][n[1]]["count"]+1
-                else:
-                    ngram_dict[n[0]][n[1]].update({n[2]: {"count": 1}})
-            else:
-                ngram_dict[n[0]].update({n[1]: {"count": 1}})
-                ngram_dict[n[0]][n[1]].update({n[2]: {"count": 1}})
-        else:
-            ngram_dict.update({n[0]: {"count": 1}})
-            ngram_dict[n[0]].update({n[1]: {"count": 1}})
-            ngram_dict[n[0]][n[1]].update({n[2]: {"count": 1}})
-    list(map(build_dict, ngram_list))
+    def convert_tup2dict(nrgam_tup, n_dict: dict):
+        if len(nrgam_tup) > 0:
+            x = nrgam_tup[0]
+            n_dict.setdefault(x, {"count": 0})
+            n_dict[x] = convert_tup2dict(nrgam_tup[1:], n_dict[x])
+            n_dict[x]["count"] = n_dict[x]["count"] + 1
+        return n_dict
+
+    def convert_tuplist2dict(nrgam_tup_list, n_dict: dict):
+        for ngram in nrgam_tup_list:
+            convert_tup2dict(ngram, n_dict)
+        return n_dict
+
+    ngram_dict = convert_tuplist2dict(ngram_tup, ngram_dict)
+
     return ngram_dict
 
 
@@ -113,6 +109,7 @@ def main():
     user_args = parse_user_aguments()
     print(user_args)
     ngram_dict = open_json(user_args.ngram_file, default_json_for_ngram())
+    #corpus = [nltk.corpus.webtext.raw(), nltk.corpus.brown.raw()]
     save_json(
         user_args.ngram_file,
         ngram_builder(ngram_dict, nltk.corpus.webtext.raw(), user_args.depth)
