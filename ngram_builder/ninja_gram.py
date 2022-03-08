@@ -19,9 +19,9 @@ def ngram_builder(ngram_dict, rawstr, depth):
     def convert_tup2dict(nrgam_tup, n_dict: dict):
         if len(nrgam_tup) > 0:
             x = nrgam_tup[0]
-            n_dict.setdefault(x, {"count": 0})
+            n_dict.setdefault(x, {"__count__": 0})
             n_dict[x] = convert_tup2dict(nrgam_tup[1:], n_dict[x])
-            n_dict[x]["count"] = n_dict[x]["count"] + 1
+            n_dict[x]["__count__"] = n_dict[x]["__count__"] + 1
         return n_dict
 
     def convert_tuplist2dict(nrgam_tup_list, n_dict: dict):
