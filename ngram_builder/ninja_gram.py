@@ -13,8 +13,6 @@ import nltk.corpus
 
 
 def ngram_builder(ngram_dict, rawstr, depth):
-    strlist = list(rawstr.encode("ascii", "ignore").decode().lower())
-    ngram_tup = list(ngrams(strlist, depth))
 
     def convert_tup2dict(nrgam_tup, n_dict: dict):
         if len(nrgam_tup) > 0:
@@ -29,7 +27,19 @@ def ngram_builder(ngram_dict, rawstr, depth):
             convert_tup2dict(ngram, n_dict)
         return n_dict
 
-    ngram_dict = convert_tuplist2dict(ngram_tup, ngram_dict)
+    strlist = list(rawstr.encode("ascii", "ignore").decode().lower())
+
+    ngram_tup = list(ngrams(strlist, depth))
+    ngram_dict["__ngrams__"]["__letters__"] = convert_tuplist2dict(
+        ngram_tup, ngram_dict["__ngrams__"]["__letters__"])
+
+    replace_dict = {"\n": " ", "\r": "", "\t": " ", ".": "",
+                    ",": "", ":": "", ";": "", "!": "", '"': ""}
+    strlist = rawstr.encode("ascii", "ignore").decode(
+    ).lower().translate(replace_dict).split(" ")
+    ngram_tup = list(ngrams(strlist, depth))
+    ngram_dict["__ngrams__"]["__words__"] = convert_tuplist2dict(
+        ngram_tup, ngram_dict["__ngrams__"]["__words__"])
 
     return ngram_dict
 
@@ -59,11 +69,11 @@ def default_json_for_ngram():
         dict: default json ngram structur
     """
     default_json = {
-        # "_reading_corpus": [],  # list of references used to generate ngram
-        # "_ngrams": {
-        #     "_letters": {},  # ngram for letter
-        #     "_words": {}  # nrgam for words
-        # }
+        # "__reading_corpus__": [],  # list of references used to generate ngram
+        "__ngrams__": {
+            "__letters__": {},  # ngram for letter
+            "__words__": {}  # nrgam for words
+        }
     }
     return default_json
 
