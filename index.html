@@ -4,11 +4,34 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/styles.css">
 	<title>Fluid Key</title>
 </head>
 <body onload="main()">
-	<textarea id="textbox" width="800px" height="math(100%-400px)" ></textarea>
-	<canvas id="Keyboard-Canvas" width="800px" height="400px" style="border:1px solid #000000;"></canvas>
+	<section class="messaging-app">
+		<section class="message-header">Fluid Key</section>
+		<section class="discussion">
+		<!--Thanks to https://codepen.io/jmpp/pen/mprGZo for this message app look -->
+		
+			<div class="bubble sender first">Hello</div>
+			<div class="bubble sender last">Did you know you can type stuff below!</div>
+			
+			<div class="bubble recipient first">No way!</div>
+			<div class="bubble recipient last">Wait, how?</div>
+			
+			<div class="bubble sender first">Swipe in the "keyboard" area!</div>
+			<div class="bubble sender middle">Touch your starting letter and swipe to the next one</div>
+			<div class="bubble sender last">It's a work in progress (more a concept demo), hope you enjoy!</div>
+			
+			<div class="bubble recipient">Dope!</div>
+		</section>
+		<div class="input">
+			<textarea id="textbox"></textarea>
+		</div>
+		<div class="keyboard">
+			<canvas id="keyboard-canvas"></canvas>
+		</div>
+	</section>
 </body>
 <footer>
 	<script type="text/javascript" src="scripts/main.js"></script>
